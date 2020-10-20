@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.Util;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -47,6 +48,11 @@ public class InMemoryMealRepository implements MealRepository {
     public Meal get(int id, int userId) {
         InMemoryBaseRepository<Meal> meals = usersMealsMap.get(userId);
         return meals == null ? null : meals.get(id);
+    }
+
+    @Override
+    public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
+        return filterByPredicate(userId, meal -> Util.isBetweenHalfOpen(meal.getDateTime(), startDateTime, endDateTime));
     }
 
     @Override
